@@ -280,6 +280,7 @@ input[type=file]{display:none;}
 <div id="nav-bar">
   <button class="nav-btn active" id="nav-wall" onclick="window.showSection('wall')">💙 Wall</button>
   <button class="nav-btn" id="nav-booth" onclick="window.showSection('booth')">🎞️ WebBooth</button>
+  <button class="nav-btn" id="copy-link-btn" onclick="window.copyPageLink()">🔗 Copy Link</button>
   <button class="nav-btn edit-btn" onclick="window.openEditor()">✦ Edit</button>
 </div>
 
@@ -961,6 +962,24 @@ function startFlowerPreview(){
     startFlowerPreview();
   });
 });
+window.copyPageLink = function(){
+  const url = window.location.href;
+  navigator.clipboard.writeText(url).then(()=>{
+    const btn = document.getElementById('copy-link-btn');
+    const orig = btn.textContent;
+    btn.textContent = '✓ Copied!';
+    btn.style.color = '#34d399';
+    btn.style.borderColor = '#34d399';
+    setTimeout(()=>{
+      btn.textContent = orig;
+      btn.style.color = '';
+      btn.style.borderColor = '';
+    }, 2000);
+  }).catch(()=>{
+    // Fallback kung hindi supported ang clipboard
+    prompt('Copy this link:', url);
+  });
+}
 </script>
 </body>
 </html>
