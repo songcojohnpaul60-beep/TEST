@@ -263,16 +263,6 @@ input[type=file]{display:none;}
 
 @media(max-width:500px){.polaroid{width:140px;padding:8px 8px 32px;}}
 </style>
-
-<script type="importmap">
-  {
-    "imports": {
-
- "firebase/app": "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js",
-      "firebase/database": "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"
-    }
-  }
-</script>
 </head>
 <body>
 <canvas id="star-canvas"></canvas>
@@ -382,7 +372,7 @@ input[type=file]{display:none;}
 <div id="editor">
   <div class="ed-wrap">
     <div class="ed-title">✦ Customize your surprise ✦</div>
-    <div class="ed-sub" style="color: #34d399;">🔒 Connected to Live Database</div>
+    <div class="ed-sub" style="color:#34d399;">🔒 Connected to Live Database</div>
     <div class="ed-section">
       <h3>📝 Texts</h3>
       <div class="ed-row"><span class="ed-label">Enter title</span><input class="ed-input" id="e-enter-title" placeholder="Open your eyes 💙"></div>
@@ -435,11 +425,8 @@ input[type=file]{display:none;}
 </div>
 
 <script type="module">
-// Dahil naka-npm ka, diretso na ang pag-import mula sa packages!
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
 import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
-
-// TOTOONG CONFIG MO NA MAY DATABASE URL 💙
 
 const firebaseConfig = {
   apiKey: "AIzaSyCS8dzm_8ATL35FPU5COtKaCD3X2ppsmfk",
@@ -448,16 +435,13 @@ const firebaseConfig = {
   storageBucket: "surprise-wall.firebasestorage.app",
   messagingSenderId: "804735826233",
   appId: "1:804735826233:web:0298782fe2f49cc8c390e8",
-  databaseURL: "https://surprise-wall-default-rtdb.asia-southeast1.firebasedatabase.app"  // ← idagdag to
+  databaseURL: "https://surprise-wall-default-rtdb.asia-southeast1.firebasedatabase.app"
 };
 
-
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const dbRef = ref(db, 'surprise_config');
 
-// DEFAULT DATA (Ipapakita habang naglo-load o kung wala pang laman ang DB)
 let CONFIG = {
   enterTitle:"Open your eyes 💙",
   enterSub:"Something beautiful is waiting for you",
@@ -478,7 +462,6 @@ let CONFIG = {
 
 let readNotes=new Set(), total=0;
 
-// LISTEN TO DATABASE REALTIME UPDATES
 onValue(dbRef, (snapshot) => {
   const data = snapshot.val();
   if(data) {
@@ -486,10 +469,11 @@ onValue(dbRef, (snapshot) => {
     applyTexts();
     buildWall();
   } else {
-    set(dbRef, CONFIG); // Kung walang laman ang DB, isesave nito yung default nating memories
+    set(dbRef, CONFIG);
   }
 });
-// STARS BACKGROUND
+
+// STARS
 (function(){
   const c=document.getElementById('star-canvas');
   function resize(){c.width=innerWidth;c.height=innerHeight;}
@@ -517,12 +501,31 @@ function applyTexts(){
   document.getElementById('finale-msg').textContent=CONFIG.finaleMsg;
 }
 
+// COPY LINK
+window.copyPageLink = function(){
+  const url = window.location.href;
+  navigator.clipboard.writeText(url).then(()=>{
+    const btn = document.getElementById('copy-link-btn');
+    const orig = btn.textContent;
+    btn.textContent = '✓ Copied!';
+    btn.style.color = '#34d399';
+    btn.style.borderColor = '#34d399';
+    setTimeout(()=>{
+      btn.textContent = orig;
+      btn.style.color = '';
+      btn.style.borderColor = '';
+    }, 2000);
+  }).catch(()=>{
+    prompt('Copy this link:', url);
+  });
+}
+
 window.showSection = function(name){
   document.getElementById('wall').style.display=name==='wall'?'block':'none';
   document.getElementById('booth-screen').style.display=name==='booth'?'block':'none';
   document.querySelectorAll('.nav-btn:not(.edit-btn)').forEach(b=>b.classList.remove('active'));
   document.getElementById('nav-'+name).classList.add('active');
-  if(name==='booth') {
+  if(name==='booth'){
     window.stripTheme='blue';
     document.getElementById('strip-theme').value='blue';
     initBooth();
@@ -541,7 +544,7 @@ window.enterWall = function(){
 }
 
 function buildWall(){
-  if (!CONFIG.photos) return;
+  if(!CONFIG.photos)return;
   total=CONFIG.photos.length;readNotes.clear();
   const grid=document.getElementById('photo-grid');grid.innerHTML='';
   CONFIG.photos.forEach((p,i)=>{
@@ -692,7 +695,7 @@ function runFlowerCanvas(canvas,colors,type,count,loop){
   return()=>{running=false;ctx.clearRect(0,0,canvas.width,canvas.height);};
 }
 
-// WEBBOOTH CODE
+// WEBBOOTH
 window.boothSlots=[null,null,null,null];
 window.activeFilter='none';
 window.stripTheme='blue';
@@ -820,7 +823,7 @@ window.saveStrip = function(){
   document.head.appendChild(script);
 }
 
-// EDITOR CODE
+// EDITOR
 const PRESET_COLORS=['#1e40af','#2563eb','#3b82f6','#60a5fa','#93c5fd','#0284c7','#06b6d4','#14b8a6','#7c3aed','#6366f1','#f43f5e','#059669'];
 window.selectedColors=[];
 let previewStop=null;
@@ -860,12 +863,12 @@ window.openEditor = function(){
 window.closeEditor = function(){document.getElementById('editor').classList.remove('open');if(previewStop){previewStop();previewStop=null;}}
 
 window.saveAndApply = function(){
-  const saveBtn = document.getElementById('db-save-btn');
-  saveBtn.textContent = "⏳ Uploading to Firebase...";
-  saveBtn.disabled = true;
+  const saveBtn=document.getElementById('db-save-btn');
+  saveBtn.textContent="⏳ Uploading to Firebase...";
+  saveBtn.disabled=true;
 
-  const cards = document.querySelectorAll('.photo-card');
-  const photosData = Array.from(cards).map(card=>{
+  const cards=document.querySelectorAll('.photo-card');
+  const photosData=Array.from(cards).map(card=>{
     const obj={};
     const lbl=card.querySelector('.pc-label');const note=card.querySelector('.pc-note');
     if(lbl)obj.label=lbl.value;if(note)obj.note=note.value;
@@ -873,26 +876,25 @@ window.saveAndApply = function(){
     return obj;
   }).filter(p=>p.label||p.note);
 
-  const newConfig = {
-    enterTitle: document.getElementById('e-enter-title').value || CONFIG.enterTitle,
-    enterSub: document.getElementById('e-enter-sub').value || CONFIG.enterSub,
-    wallTitle: document.getElementById('e-wall-title').value || CONFIG.wallTitle,
-    finaleMsg: document.getElementById('e-finale').value || CONFIG.finaleMsg,
-    flowerColors: window.selectedColors.length ? window.selectedColors : ['#3b82f6'],
-    flowerType: document.getElementById('e-flower-type').value,
-    flowerCount: parseInt(document.getElementById('e-flower-count').value),
-    photos: photosData
+  const newConfig={
+    enterTitle:document.getElementById('e-enter-title').value||CONFIG.enterTitle,
+    enterSub:document.getElementById('e-enter-sub').value||CONFIG.enterSub,
+    wallTitle:document.getElementById('e-wall-title').value||CONFIG.wallTitle,
+    finaleMsg:document.getElementById('e-finale').value||CONFIG.finaleMsg,
+    flowerColors:window.selectedColors.length?window.selectedColors:['#3b82f6'],
+    flowerType:document.getElementById('e-flower-type').value,
+    flowerCount:parseInt(document.getElementById('e-flower-count').value),
+    photos:photosData
   };
 
-  // DIRETSO SAVE SA FIREBASE REALTIME DB
-  set(dbRef, newConfig).then(() => {
-    saveBtn.textContent = "Save & Upload to DB 💙";
-    saveBtn.disabled = false;
+  set(dbRef,newConfig).then(()=>{
+    saveBtn.textContent="Save & Upload to DB 💙";
+    saveBtn.disabled=false;
     window.closeEditor();
-  }).catch((error) => {
-    alert("Database Error: " + error.message);
-    saveBtn.textContent = "Save & Upload to DB 💙";
-    saveBtn.disabled = false;
+  }).catch((error)=>{
+    alert("Database Error: "+error.message);
+    saveBtn.textContent="Save & Upload to DB 💙";
+    saveBtn.disabled=false;
   });
 }
 
@@ -911,28 +913,19 @@ function makePhotoCard(p,i){
   thumb.addEventListener('click',()=>fi.click());
   fi.addEventListener('change',e=>{
     const file=e.target.files[0];if(!file)return;
-    
-    // Auto-compress high-res image para maging magaan sa database
-    const imgElement = document.createElement('img');
-    const reader = new FileReader();
-    reader.onload = function(ev) {
-      imgElement.src = ev.target.result;
-    };
-    imgElement.onload = function() {
-      const canvas = document.createElement('canvas');
-      const max_size = 350; // Optimal grid size para sa space ng Firebase
-      let width = imgElement.width;
-      let height = imgElement.height;
-      if (width > height) {
-        if (width > max_size) { height *= max_size / width; width = max_size; }
-      } else {
-        if (height > max_size) { width *= max_size / height; height = max_size; }
-      }
-      canvas.width = width; canvas.height = height;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(imgElement, 0, 0, width, height);
-      const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.6); // 60% Quality compression
-      
+    const imgElement=document.createElement('img');
+    const reader=new FileReader();
+    reader.onload=function(ev){imgElement.src=ev.target.result;};
+    imgElement.onload=function(){
+      const canvas=document.createElement('canvas');
+      const max_size=350;
+      let width=imgElement.width;let height=imgElement.height;
+      if(width>height){if(width>max_size){height*=max_size/width;width=max_size;}}
+      else{if(height>max_size){width*=max_size/height;height=max_size;}}
+      canvas.width=width;canvas.height=height;
+      const ctx=canvas.getContext('2d');
+      ctx.drawImage(imgElement,0,0,width,height);
+      const compressedDataUrl=canvas.toDataURL('image/jpeg',0.6);
       card.dataset.src=compressedDataUrl;card.dataset.emoji='';
       thumb.innerHTML=`<img src="${compressedDataUrl}" alt=""><div class="photo-thumb-overlay">📷</div><input type="file" accept="image/*" class="pc-file">`;
       thumb.querySelector('.pc-file').addEventListener('change',fi.onchange);
@@ -962,24 +955,6 @@ function startFlowerPreview(){
     startFlowerPreview();
   });
 });
-window.copyPageLink = function(){
-  const url = window.location.href;
-  navigator.clipboard.writeText(url).then(()=>{
-    const btn = document.getElementById('copy-link-btn');
-    const orig = btn.textContent;
-    btn.textContent = '✓ Copied!';
-    btn.style.color = '#34d399';
-    btn.style.borderColor = '#34d399';
-    setTimeout(()=>{
-      btn.textContent = orig;
-      btn.style.color = '';
-      btn.style.borderColor = '';
-    }, 2000);
-  }).catch(()=>{
-    // Fallback kung hindi supported ang clipboard
-    prompt('Copy this link:', url);
-  });
-}
 </script>
 </body>
 </html>
