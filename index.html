@@ -436,10 +436,10 @@ input[type=file]{display:none;}
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, set, onValue } from "firebase/database";
 
-// 🚨 PASTE MO DITO ANG KOPYANG CONFIG MULA SA FIREBASE CONSOLE 🚨
 const firebaseConfig = {
   apiKey: "AIzaSyCS8dzm_8ATL35FPU5COtKaCD3X2ppsmfk",
   authDomain: "surprise-wall.firebaseapp.com",
+  databaseURL: "https://surprise-wall-default-rtdb.firebaseio.com/", // 👈 SIGURADUHING GANITO ANG NAKASULAT DITO!
   projectId: "surprise-wall",
   storageBucket: "surprise-wall.firebasestorage.app",
   messagingSenderId: "804735826233",
