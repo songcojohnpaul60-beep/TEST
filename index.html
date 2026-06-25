@@ -267,7 +267,8 @@ input[type=file]{display:none;}
 <script type="importmap">
   {
     "imports": {
-      "firebase/app": "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js",
+
+ "firebase/app": "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js",
       "firebase/database": "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"
     }
   }
@@ -433,13 +434,15 @@ input[type=file]{display:none;}
 </div>
 
 <script type="module">
-import { initializeApp } from "firebase/app";
-import { getDatabase, ref, set, onValue } from "firebase/database";
+// Dahil naka-npm ka, diretso na ang pag-import mula sa packages!
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
 
+// TOTOONG CONFIG MO NA MAY DATABASE URL 💙
 const firebaseConfig = {
   apiKey: "AIzaSyCS8dzm_8ATL35FPU5COtKaCD3X2ppsmfk",
   authDomain: "surprise-wall.firebaseapp.com",
-  databaseURL: "https://surprise-wall-default-rtdb.firebaseio.com/", // 👈 SIGURADUHING GANITO ANG NAKASULAT DITO!
+  databaseURL: "https://surprise-wall-default-rtdb.firebaseio.com/", // 👈 Eto ang magpapakonekta sa database niyo!
   projectId: "surprise-wall",
   storageBucket: "surprise-wall.firebasestorage.app",
   messagingSenderId: "804735826233",
@@ -480,11 +483,9 @@ onValue(dbRef, (snapshot) => {
     applyTexts();
     buildWall();
   } else {
-    // Kung malinis pa ang database, i-upload ang default config
-    set(dbRef, CONFIG);
+    set(dbRef, CONFIG); // Kung walang laman ang DB, isesave nito yung default nating memories
   }
 });
-
 // STARS BACKGROUND
 (function(){
   const c=document.getElementById('star-canvas');
