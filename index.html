@@ -249,8 +249,6 @@ textarea.ed-input{resize:vertical;min-height:60px;line-height:1.6;}
 .ed-btn.primary:hover{background:#2563eb;box-shadow:0 0 20px rgba(59,130,246,0.4);}
 .ed-btn.secondary{background:transparent;border:1px solid rgba(59,130,246,0.2);color:#60a5fa;}
 .ed-btn.secondary:hover{border-color:#3b82f6;color:#eff6ff;}
-.ed-btn.share-btn{background:rgba(16,185,129,0.2);border:1px solid #10b981;color:#10b981;}
-.ed-btn.share-btn:hover{background:rgba(16,185,129,0.35);color:#a7f3d0;box-shadow:0 0 20px rgba(16,185,129,0.3);}
 select.ed-input{cursor:pointer;background:rgba(15,23,42,0.9);}
 input[type=file]{display:none;}
 .flower-color-grid{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
@@ -265,38 +263,42 @@ input[type=file]{display:none;}
 
 @media(max-width:500px){.polaroid{width:140px;padding:8px 8px 32px;}}
 </style>
+
+<script type="importmap">
+  {
+    "imports": {
+      "firebase/app": "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js",
+      "firebase/database": "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"
+    }
+  }
+</script>
 </head>
 <body>
 <canvas id="star-canvas"></canvas>
 
-<!-- NAV -->
 <div id="nav-bar">
-  <button class="nav-btn active" id="nav-wall" onclick="showSection('wall')">💙 Wall</button>
-  <button class="nav-btn" id="nav-booth" onclick="showSection('booth')">🎞️ WebBooth</button>
-  <button class="nav-btn edit-btn" onclick="openEditor()">✦ Edit</button>
+  <button class="nav-btn active" id="nav-wall" onclick="window.showSection('wall')">💙 Wall</button>
+  <button class="nav-btn" id="nav-booth" onclick="window.showSection('booth')">🎞️ WebBooth</button>
+  <button class="nav-btn edit-btn" onclick="window.openEditor()">✦ Edit</button>
 </div>
 
-<!-- ENTER -->
 <div id="enter-screen">
   <h1 id="cfg-enter-title">Open your eyes 💙</h1>
   <p id="cfg-enter-sub">Something beautiful is waiting for you</p>
-  <button id="enter-btn" onclick="enterWall()">Enter ♡</button>
+  <button id="enter-btn" onclick="window.enterWall()">Enter ♡</button>
 </div>
 
-<!-- WALL -->
 <div id="wall">
   <h2 id="wall-title">✦ Every moment with you ✦</h2>
   <p id="wall-hint">tap each photo to read what's behind it</p>
   <div class="rope-line" id="photo-grid"></div>
 </div>
 
-<!-- WEBBOOTH -->
 <div id="booth-screen">
   <div class="booth-wrap">
     <div class="booth-title">🎞️ WebBooth</div>
     <div class="booth-sub">create your photo strip</div>
     <div class="booth-layout">
-      <!-- STRIP PREVIEW -->
       <div class="strip-panel">
         <div class="strip-wrap" id="strip-wrap">
           <div class="strip-header" id="strip-header-txt">💙 our moments 💙</div>
@@ -305,11 +307,10 @@ input[type=file]{display:none;}
           <div class="strip-date" id="strip-date-txt"></div>
         </div>
         <div style="margin-top:14px;display:flex;gap:8px;justify-content:center;">
-          <button class="booth-btn primary" onclick="saveStrip()">💾 Save Strip</button>
-          <button class="booth-btn" onclick="clearStrip()">↺ Clear</button>
+          <button class="booth-btn primary" onclick="window.saveStrip()">💾 Save Strip</button>
+          <button class="booth-btn" onclick="window.clearStrip()">↺ Clear</button>
         </div>
       </div>
-      <!-- CONTROLS -->
       <div class="ctrl-panel">
         <div class="ctrl-box">
           <div class="ctrl-label">📸 Add Photos (up to 4)</div>
@@ -321,7 +322,7 @@ input[type=file]{display:none;}
           <div class="ctrl-label">🎨 Strip Style</div>
           <div class="ctrl-row">
             <span class="ctrl-txt">Theme</span>
-            <select class="ctrl-sel" id="strip-theme" onchange="updateStrip()">
+            <select class="ctrl-sel" id="strip-theme" onchange="window.updateStrip()">
               <option value="blue">Ocean Blue 💙</option>
               <option value="white">Classic White</option>
               <option value="dark">Midnight Blue</option>
@@ -331,23 +332,23 @@ input[type=file]{display:none;}
           </div>
           <div class="ctrl-row"><span class="ctrl-txt">Filter</span></div>
           <div class="filter-row" id="filter-row">
-            <button class="filter-btn on" onclick="setFilter('none',this)">None</button>
-            <button class="filter-btn" onclick="setFilter('grayscale',this)">B&amp;W</button>
-            <button class="filter-btn" onclick="setFilter('sepia',this)">Sepia</button>
-            <button class="filter-btn" onclick="setFilter('warm',this)">Warm</button>
-            <button class="filter-btn" onclick="setFilter('cool',this)">Cool</button>
-            <button class="filter-btn" onclick="setFilter('fade',this)">Fade</button>
+            <button class="filter-btn on" onclick="window.setFilter('none',this)">None</button>
+            <button class="filter-btn" onclick="window.setFilter('grayscale',this)">B&amp;W</button>
+            <button class="filter-btn" onclick="window.setFilter('sepia',this)">Sepia</button>
+            <button class="filter-btn" onclick="window.setFilter('warm',this)">Warm</button>
+            <button class="filter-btn" onclick="window.setFilter('cool',this)">Cool</button>
+            <button class="filter-btn" onclick="window.setFilter('fade',this)">Fade</button>
           </div>
         </div>
         <div class="ctrl-box">
           <div class="ctrl-label">✨ Header &amp; Footer</div>
           <div class="ctrl-row" style="margin-bottom:8px;">
             <span class="ctrl-txt">Header</span>
-            <input class="text-inp" id="strip-header-in" value="💙 our moments 💙" oninput="updateStripText()">
+            <input class="text-inp" id="strip-header-in" value="💙 our moments 💙" oninput="window.updateStripText()">
           </div>
           <div class="ctrl-row" style="margin-bottom:8px;">
             <span class="ctrl-txt">Footer</span>
-            <input class="text-inp" id="strip-footer-in" value="forever &amp; always" oninput="updateStripText()">
+            <input class="text-inp" id="strip-footer-in" value="forever &amp; always" oninput="window.updateStripText()">
           </div>
           <div class="ctrl-label" style="margin-top:8px;">Stickers</div>
           <div class="sticker-row" id="sticker-row"></div>
@@ -357,35 +358,31 @@ input[type=file]{display:none;}
   </div>
 </div>
 
-<!-- PROGRESS -->
 <div id="prog-wrap">
   <div id="prog-label">0 / 0 memories opened</div>
   <div id="prog-track"><div id="prog-fill"></div></div>
 </div>
 
-<!-- NOTE -->
 <div id="note-overlay">
   <div id="note-card">
     <span class="note-deco">💙</span>
     <span id="note-num"></span>
     <div id="note-text"></div>
-    <button id="note-close" onclick="closeNote()">close 💙</button>
+    <button id="note-close" onclick="window.closeNote()">close 💙</button>
   </div>
 </div>
 
-<!-- FINALE -->
 <div id="finale">
   <canvas id="flower-canvas"></canvas>
   <div id="finale-msg"></div>
 </div>
 
-<!-- EDITOR -->
 <div id="editor">
   <div class="ed-wrap">
     <div class="ed-title">✦ Customize your surprise ✦</div>
-    <div class="ed-sub">changes saved in your browser</div>
+    <div class="ed-sub" style="color: #34d399;">🔒 Connected to Live Database</div>
     <div class="ed-section">
-      <h3><h3>📝 Texts</h3>
+      <h3>📝 Texts</h3>
       <div class="ed-row"><span class="ed-label">Enter title</span><input class="ed-input" id="e-enter-title" placeholder="Open your eyes 💙"></div>
       <div class="ed-row"><span class="ed-label">Enter subtitle</span><input class="ed-input" id="e-enter-sub"></div>
       <div class="ed-row"><span class="ed-label">Wall title</span><input class="ed-input" id="e-wall-title"></div>
@@ -426,18 +423,36 @@ input[type=file]{display:none;}
     <div class="ed-section">
       <h3>📸 Photos &amp; Notes</h3>
       <div class="photo-cards" id="photo-cards"></div>
-      <button class="add-photo-btn" onclick="addPhotoCard()">+ Add photo</button>
+      <button class="add-photo-btn" onclick="window.addPhotoCard()">+ Add photo</button>
     </div>
     <div class="ed-btn-row">
-      <button class="ed-btn secondary" onclick="closeEditor()">Cancel</button>
-      <button class="ed-btn share-btn" id="share-btn" onclick="generateShareLink()">🔗 Generate Share Link</button>
-      <button class="ed-btn primary" onclick="saveAndApply()">Save &amp; Apply 💙</button>
+      <button class="ed-btn secondary" onclick="window.closeEditor()">Cancel</button>
+      <button class="ed-btn primary" id="db-save-btn" onclick="window.saveAndApply()">Save &amp; Upload to DB 💙</button>
     </div>
   </div>
 </div>
 
-<script>
-// ── CONFIG ──
+<script type="module">
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, set, onValue } from "firebase/database";
+
+// 🚨 PASTE MO DITO ANG KOPYANG CONFIG MULA SA FIREBASE CONSOLE 🚨
+const firebaseConfig = {
+  apiKey: "AIzaSyYourOwnApiKeyHere...",
+  authDomain: "your-app.firebaseapp.com",
+  databaseURL: "https://your-app-default-rtdb.firebaseio.com/",
+  projectId: "your-app",
+  storageBucket: "your-app.appspot.com",
+  messagingSenderId: "1234567890",
+  appId: "1:1234567890:web:abcdef123456"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const dbRef = ref(db, 'surprise_config');
+
+// DEFAULT DATA (Ipapakita habang naglo-load o kung wala pang laman ang DB)
 let CONFIG = {
   enterTitle:"Open your eyes 💙",
   enterSub:"Something beautiful is waiting for you",
@@ -456,37 +471,22 @@ let CONFIG = {
   ]
 };
 
-// URL SHARE LOADER
-// BAGONG URL CONFIG LOADER
-function loadUrlConfig() {
-  const params = new URLSearchParams(window.location.search);
-  let dataParam = params.get('d');
-  if (dataParam) {
-    try {
-      // Iba-balance muli ang padding ng base64
-      dataParam = dataParam.replace(/-/g, '+').replace(/_/g, '/');
-      while (dataParam.length % 4) { dataParam += '='; }
-      const decodedData = decodeURIComponent(escape(atob(dataParam)));
-      const parsed = JSON.parse(decodedData);
-      if (parsed && typeof parsed === 'object') {
-        CONFIG = parsed;
-        return true;
-      }
-    } catch(e) {
-      console.error("Failed to load URL configuration: ", e);
-    }
+let readNotes=new Set(), total=0;
+
+// LISTEN TO DATABASE REALTIME UPDATES
+onValue(dbRef, (snapshot) => {
+  const data = snapshot.val();
+  if(data) {
+    CONFIG = data;
+    applyTexts();
+    buildWall();
+  } else {
+    // Kung malinis pa ang database, i-upload ang default config
+    set(dbRef, CONFIG);
   }
-  return false;
-}
+});
 
-const loadedFromUrl = loadUrlConfig();
-if (!loadedFromUrl) {
-  try{const s=localStorage.getItem('surprise_cfg_v3');if(s)CONFIG=JSON.parse(s);}catch(e){}
-}
-
-let readNotes=new Set(),total=0;
-
-// STARS
+// STARS BACKGROUND
 (function(){
   const c=document.getElementById('star-canvas');
   function resize(){c.width=innerWidth;c.height=innerHeight;}
@@ -507,42 +507,38 @@ let readNotes=new Set(),total=0;
   draw();
 })();
 
-// TEXTS
 function applyTexts(){
   document.getElementById('cfg-enter-title').textContent=CONFIG.enterTitle;
   document.getElementById('cfg-enter-sub').textContent=CONFIG.enterSub;
   document.getElementById('wall-title').textContent=CONFIG.wallTitle;
   document.getElementById('finale-msg').textContent=CONFIG.finaleMsg;
 }
-applyTexts();
 
-// SECTION SWITCH
-function showSection(name){
+window.showSection = function(name){
   document.getElementById('wall').style.display=name==='wall'?'block':'none';
   document.getElementById('booth-screen').style.display=name==='booth'?'block':'none';
   document.querySelectorAll('.nav-btn:not(.edit-btn)').forEach(b=>b.classList.remove('active'));
   document.getElementById('nav-'+name).classList.add('active');
   if(name==='booth') {
-    stripTheme='blue';
+    window.stripTheme='blue';
     document.getElementById('strip-theme').value='blue';
     initBooth();
   }
 }
 
-// ENTER
-function enterWall(){
+window.enterWall = function(){
   const s=document.getElementById('enter-screen');
   s.style.opacity='0';
   setTimeout(()=>{
     s.style.display='none';
     document.getElementById('nav-bar').style.display='flex';
-    showSection('wall');
+    window.showSection('wall');
     buildWall();
   },1200);
 }
 
-// WALL
 function buildWall(){
+  if (!CONFIG.photos) return;
   total=CONFIG.photos.length;readNotes.clear();
   const grid=document.getElementById('photo-grid');grid.innerHTML='';
   CONFIG.photos.forEach((p,i)=>{
@@ -575,7 +571,7 @@ function openNote(i){
   document.getElementById('note-num').textContent=`${i+1} / ${total}`;
   document.getElementById('note-overlay').classList.add('active');
 }
-function closeNote(){
+window.closeNote = function(){
   document.getElementById('note-overlay').classList.remove('active');
   if(readNotes.size>=total)setTimeout(triggerFinale,700);
 }
@@ -585,7 +581,6 @@ function updateProgress(){
   document.getElementById('prog-fill').style.width=`${(n/total)*100}%`;
 }
 
-// FINALE
 function triggerFinale(){
   document.getElementById('finale-msg').textContent=CONFIG.finaleMsg;
   CONFIG.photos.forEach((p,i)=>{
@@ -595,7 +590,6 @@ function triggerFinale(){
   setTimeout(()=>{document.getElementById('finale').classList.add('active');spawnFlowers();},CONFIG.photos.length*55+600);
 }
 
-// FLOWERS
 function spawnFlowers(){
   const canvas=document.getElementById('flower-canvas');
   runFlowerCanvas(canvas,CONFIG.flowerColors,CONFIG.flowerType,CONFIG.flowerCount,false);
@@ -695,10 +689,10 @@ function runFlowerCanvas(canvas,colors,type,count,loop){
   return()=>{running=false;ctx.clearRect(0,0,canvas.width,canvas.height);};
 }
 
-// WEBBOOTH
-let boothSlots=[null,null,null,null];
-let activeFilter='none';
-let stripTheme='blue';
+// WEBBOOTH CODE
+window.boothSlots=[null,null,null,null];
+window.activeFilter='none';
+window.stripTheme='blue';
 const STICKERS=['💙','🌊','✨','❄️','💎','💫','🌙','⭐','🦋','🌈','❤️','🧸'];
 const THEMES={
   blue:{bg:'#e0f2fe',headerColor:'#0369a1',footerColor:'#0284c7',slotBorder:'#bae6fd'},
@@ -732,10 +726,10 @@ function renderBoothSlotGrid(){
   const grid=document.getElementById('booth-slot-grid');grid.innerHTML='';
   for(let i=0;i<4;i++){
     const d=document.createElement('div');d.className='booth-add-slot';d.id='bslot-'+i;
-    if(boothSlots[i]){
-      const img=document.createElement('img');img.src=boothSlots[i];
+    if(window.boothSlots[i]){
+      const img=document.createElement('img');img.src=window.boothSlots[i];
       const x=document.createElement('div');x.className='slot-x';x.textContent='✕';
-      x.onclick=(e)=>{e.stopPropagation();boothSlots[i]=null;renderBoothSlotGrid();renderStripPreview();};
+      x.onclick=(e)=>{e.stopPropagation();window.boothSlots[i]=null;renderBoothSlotGrid();renderStripPreview();};
       d.appendChild(img);d.appendChild(x);d.style.cursor='default';
     }else{
       d.textContent='+';
@@ -743,7 +737,7 @@ function renderBoothSlotGrid(){
         const fi=document.getElementById('booth-file-in');
         fi.onchange=e=>{
           const file=e.target.files[0];if(!file)return;
-          const r=new FileReader();r.onload=ev=>{boothSlots[i]=ev.target.result;renderBoothSlotGrid();renderStripPreview();};
+          const r=new FileReader();r.onload=ev=>{window.boothSlots[i]=ev.target.result;renderBoothSlotGrid();renderStripPreview();};
           r.readAsDataURL(file);fi.value='';fi.onchange=null;
         };
         fi.click();
@@ -756,27 +750,27 @@ function renderBoothSlotGrid(){
 document.getElementById('booth-file-in').addEventListener('change',function(e){
   const files=Array.from(e.target.files);
   files.forEach(file=>{
-    const emptyIdx=boothSlots.indexOf(null);if(emptyIdx===-1)return;
-    const r=new FileReader();r.onload=ev=>{boothSlots[emptyIdx]=ev.target.result;renderBoothSlotGrid();renderStripPreview();};
+    const emptyIdx=window.boothSlots.indexOf(null);if(emptyIdx===-1)return;
+    const r=new FileReader();r.onload=ev=>{window.boothSlots[emptyIdx]=ev.target.result;renderBoothSlotGrid();renderStripPreview();};
     r.readAsDataURL(file);
   });
   e.target.value='';
 });
 
-function setFilter(f,btn){
-  activeFilter=f;
+window.setFilter = function(f,btn){
+  window.activeFilter=f;
   document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
   renderStripPreview();
 }
 
-function updateStripText(){
+window.updateStripText = function(){
   document.getElementById('strip-header-txt').textContent=document.getElementById('strip-header-in').value;
   document.getElementById('strip-footer-txt').textContent=document.getElementById('strip-footer-in').value;
 }
 
-function updateStrip(){
-  stripTheme=document.getElementById('strip-theme').value;
+window.updateStrip = function(){
+  window.stripTheme=document.getElementById('strip-theme').value;
   renderStripPreview();
 }
 
@@ -789,17 +783,17 @@ const FILTER_CSS={
 
 function renderStripPreview(){
   const container=document.getElementById('strip-slots-preview');container.innerHTML='';
-  const t=THEMES[stripTheme||'blue'];
+  const t=THEMES[window.stripTheme||'blue'];
   const sw=document.getElementById('strip-wrap');sw.style.background=t.bg;
   document.getElementById('strip-header-txt').style.color=t.headerColor;
   document.getElementById('strip-footer-txt').style.color=t.footerColor;
   document.getElementById('strip-date-txt').style.color=t.footerColor;
-  boothSlots.forEach((src,i)=>{
+  window.boothSlots.forEach((src,i)=>{
     const slot=document.createElement('div');slot.className='strip-slot';
     slot.style.cssText=`border:1px solid ${t.slotBorder};`;
     if(src){
       const img=document.createElement('img');img.src=src;
-      img.style.cssText=`width:100%;height:100%;object-fit:cover;display:block;filter:${FILTER_CSS[activeFilter]||''};`;
+      img.style.cssText=`width:100%;height:100%;object-fit:cover;display:block;filter:${FILTER_CSS[window.activeFilter]||''};`;
       const num=document.createElement('div');num.className='strip-slot-num';num.textContent=`0${i+1}`;
       slot.appendChild(img);slot.appendChild(num);
     }else{
@@ -809,33 +803,33 @@ function renderStripPreview(){
   });
 }
 
-function clearStrip(){boothSlots=[null,null,null,null];renderBoothSlotGrid();renderStripPreview();}
+window.clearStrip = function(){window.boothSlots=[null,null,null,null];renderBoothSlotGrid();renderStripPreview();}
 
-function saveStrip(){
+window.saveStrip = function(){
   const sw=document.getElementById('strip-wrap');
   const script=document.createElement('script');
   script.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
   script.onload=()=>{
-    html2canvas(sw,{backgroundColor:THEMES[stripTheme||'blue'].bg,scale:3,useCORS:true,allowTaint:true}).then(canvas=>{
+    html2canvas(sw,{backgroundColor:THEMES[window.stripTheme||'blue'].bg,scale:3,useCORS:true,allowTaint:true}).then(canvas=>{
       const link=document.createElement('a');link.download='webbooth-strip.png';link.href=canvas.toDataURL('image/png');link.click();
     });
   };
   document.head.appendChild(script);
 }
 
-// EDITOR
+// EDITOR CODE
 const PRESET_COLORS=['#1e40af','#2563eb','#3b82f6','#60a5fa','#93c5fd','#0284c7','#06b6d4','#14b8a6','#7c3aed','#6366f1','#f43f5e','#059669'];
-let selectedColors=[...CONFIG.flowerColors];
+window.selectedColors=[];
 let previewStop=null;
 
 function buildColorGrid(){
   const grid=document.getElementById('fc-grid');grid.innerHTML='';
   PRESET_COLORS.forEach(c=>{
     const sw=document.createElement('div');sw.className='fc-swatch';sw.style.background=c;sw.title=c;
-    if(selectedColors.includes(c))sw.classList.add('active');
+    if(window.selectedColors.includes(c))sw.classList.add('active');
     sw.onclick=()=>{
-      if(selectedColors.includes(c)){if(selectedColors.length>1)selectedColors=selectedColors.filter(x=>x!==c);}
-      else selectedColors.push(c);
+      if(window.selectedColors.includes(c)){if(window.selectedColors.length>1)window.selectedColors=window.selectedColors.filter(x=>x!==c);}
+      else window.selectedColors.push(c);
       buildColorGrid();startFlowerPreview();
     };
     grid.appendChild(sw);
@@ -843,11 +837,11 @@ function buildColorGrid(){
 }
 
 document.getElementById('e-flower-color-pick').addEventListener('input',e=>{
-  if(!selectedColors.includes(e.target.value))selectedColors.push(e.target.value);
+  if(!window.selectedColors.includes(e.target.value))window.selectedColors.push(e.target.value);
   buildColorGrid();startFlowerPreview();
 });
 
-function openEditor(){
+window.openEditor = function(){
   document.getElementById('e-enter-title').value=CONFIG.enterTitle;
   document.getElementById('e-enter-sub').value=CONFIG.enterSub;
   document.getElementById('e-wall-title').value=CONFIG.wallTitle;
@@ -855,15 +849,18 @@ function openEditor(){
   document.getElementById('e-flower-type').value=CONFIG.flowerType;
   document.getElementById('e-flower-count').value=CONFIG.flowerCount;
   document.getElementById('e-flower-count-val').textContent=CONFIG.flowerCount;
-  selectedColors=[...CONFIG.flowerColors];
+  window.selectedColors=[...CONFIG.flowerColors];
   buildColorGrid();buildPhotoCards();
   document.getElementById('editor').classList.add('open');
   startFlowerPreview();
 }
-function closeEditor(){document.getElementById('editor').classList.remove('open');if(previewStop){previewStop();previewStop=null;}}
+window.closeEditor = function(){document.getElementById('editor').classList.remove('open');if(previewStop){previewStop();previewStop=null;}}
 
-// GENERATE CURRENT DATA OBJECT
-function getCurrentEditorData() {
+window.saveAndApply = function(){
+  const saveBtn = document.getElementById('db-save-btn');
+  saveBtn.textContent = "⏳ Uploading to Firebase...";
+  saveBtn.disabled = true;
+
   const cards = document.querySelectorAll('.photo-card');
   const photosData = Array.from(cards).map(card=>{
     const obj={};
@@ -873,60 +870,27 @@ function getCurrentEditorData() {
     return obj;
   }).filter(p=>p.label||p.note);
 
-  return {
+  const newConfig = {
     enterTitle: document.getElementById('e-enter-title').value || CONFIG.enterTitle,
     enterSub: document.getElementById('e-enter-sub').value || CONFIG.enterSub,
     wallTitle: document.getElementById('e-wall-title').value || CONFIG.wallTitle,
     finaleMsg: document.getElementById('e-finale').value || CONFIG.finaleMsg,
-    flowerColors: selectedColors.length ? selectedColors : ['#3b82f6'],
+    flowerColors: window.selectedColors.length ? window.selectedColors : ['#3b82f6'],
     flowerType: document.getElementById('e-flower-type').value,
     flowerCount: parseInt(document.getElementById('e-flower-count').value),
     photos: photosData
   };
-}
 
-// THE NEW SHAREABLE LINK GENERATOR
-// BAGONG SHAREABLE LINK GENERATOR (Gagana kahit sa Messenger)
-function generateShareLink() {
-  const currentData = getCurrentEditorData();
-  try {
-    // Kinocompress natin ang text gamit ang built-in URI encoder para hindi humaba nang sobra
-    const jsonStr = JSON.stringify(currentData);
-    const safeData = bencode(jsonStr); // Pinalitan ang btoa para maging mas maikli
-    
-    const shareUrl = `${window.location.origin}${window.location.pathname}?d=${encodeURIComponent(safeData)}`;
-    
-    // Auto-copy sa clipboard
-    navigator.clipboard.writeText(shareUrl).then(() => {
-      const shareBtn = document.getElementById('share-btn');
-      const origText = shareBtn.textContent;
-      shareBtn.textContent = "📋 Copied to Clipboard!";
-      shareBtn.style.background = "#10b981";
-      shareBtn.style.color = "#fff";
-      
-      setTimeout(() => {
-        shareBtn.textContent = origText;
-        shareBtn.style.background = "rgba(16,185,129,0.2)";
-        shareBtn.style.color = "#10b981";
-      }, 2500);
-    }).catch(err => {
-      // Kung ayaw sa messenger browser, magpapakita ng prompt na pwedeng kopyahin
-      prompt("Kopyahin ang link na ito at isend sa kaniya:", shareUrl);
-    });
-  } catch (e) {
-    alert("Paalala: Huwag muna mag-upload ng mabibigat na litrato sa Editor para magkasya ang link sa Messenger! Gumamit muna ng Emojis.");
-    console.error(e);
-  }
-}
-
-// Helper functions para sa maikling encoding
-function bencode(str) {
-  return btoa(unescape(encodeURIComponent(str))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-}
-function saveAndApply(){
-  CONFIG = getCurrentEditorData();
-  try{localStorage.setItem('surprise_cfg_v3',JSON.stringify(CONFIG));}catch(e){}
-  applyTexts();buildWall();closeEditor();
+  // DIRETSO SAVE SA FIREBASE REALTIME DB
+  set(dbRef, newConfig).then(() => {
+    saveBtn.textContent = "Save & Upload to DB 💙";
+    saveBtn.disabled = false;
+    window.closeEditor();
+  }).catch((error) => {
+    alert("Database Error: " + error.message);
+    saveBtn.textContent = "Save & Upload to DB 💙";
+    saveBtn.disabled = false;
+  });
 }
 
 function buildPhotoCards(){
@@ -945,7 +909,7 @@ function makePhotoCard(p,i){
   fi.addEventListener('change',e=>{
     const file=e.target.files[0];if(!file)return;
     
-    // Auto-compress high-resolution images to prevent URL length breaks
+    // Auto-compress high-res image para maging magaan sa database
     const imgElement = document.createElement('img');
     const reader = new FileReader();
     reader.onload = function(ev) {
@@ -953,7 +917,7 @@ function makePhotoCard(p,i){
     };
     imgElement.onload = function() {
       const canvas = document.createElement('canvas');
-      const max_size = 400; // Optimal limit size for URL transport compatibility
+      const max_size = 350; // Optimal grid size para sa space ng Firebase
       let width = imgElement.width;
       let height = imgElement.height;
       if (width > height) {
@@ -964,7 +928,7 @@ function makePhotoCard(p,i){
       canvas.width = width; canvas.height = height;
       const ctx = canvas.getContext('2d');
       ctx.drawImage(imgElement, 0, 0, width, height);
-      const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.65);
+      const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.6); // 60% Quality compression
       
       card.dataset.src=compressedDataUrl;card.dataset.emoji='';
       thumb.innerHTML=`<img src="${compressedDataUrl}" alt=""><div class="photo-thumb-overlay">📷</div><input type="file" accept="image/*" class="pc-file">`;
@@ -976,7 +940,7 @@ function makePhotoCard(p,i){
   return card;
 }
 
-function addPhotoCard(){
+window.addPhotoCard = function(){
   const card=makePhotoCard({emoji:'📸',label:'',note:''},CONFIG.photos.length);
   document.getElementById('photo-cards').appendChild(card);card.scrollIntoView({behavior:'smooth'});
 }
@@ -986,7 +950,7 @@ function startFlowerPreview(){
   const canvas=document.getElementById('flower-preview');
   const type=document.getElementById('e-flower-type').value;
   const cnt=parseInt(document.getElementById('e-flower-count').value);
-  previewStop=runFlowerCanvas(canvas,selectedColors,type,Math.min(cnt,18),true);
+  previewStop=runFlowerCanvas(canvas,window.selectedColors,type,Math.min(cnt,18),true);
 }
 
 ['e-flower-type','e-flower-count'].forEach(id=>{
