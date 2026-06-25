@@ -440,16 +440,16 @@ import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebase
 
 // TOTOONG CONFIG MO NA MAY DATABASE URL 💙
 
-
-
-  const firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyCS8dzm_8ATL35FPU5COtKaCD3X2ppsmfk",
   authDomain: "surprise-wall.firebaseapp.com",
   projectId: "surprise-wall",
   storageBucket: "surprise-wall.firebasestorage.app",
   messagingSenderId: "804735826233",
-  appId: "1:804735826233:web:0298782fe2f49cc8c390e8"
+  appId: "1:804735826233:web:0298782fe2f49cc8c390e8",
+  databaseURL: "https://surprise-wall-default-rtdb.asia-southeast1.firebasedatabase.app"  // ← idagdag to
 };
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
