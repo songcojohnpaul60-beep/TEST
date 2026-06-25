@@ -457,13 +457,16 @@ let CONFIG = {
 };
 
 // URL SHARE LOADER
+// BAGONG URL CONFIG LOADER
 function loadUrlConfig() {
   const params = new URLSearchParams(window.location.search);
-  const dataParam = params.get('d');
+  let dataParam = params.get('d');
   if (dataParam) {
     try {
-      // Decode unicode safety strings accurately
-      const decodedData = decodeURIComponent(atob(dataParam.replace(/-/g, '+').replace(/_/g, '/')));
+      // Iba-balance muli ang padding ng base64
+      dataParam = dataParam.replace(/-/g, '+').replace(/_/g, '/');
+      while (dataParam.length % 4) { dataParam += '='; }
+      const decodedData = decodeURIComponent(escape(atob(dataParam)));
       const parsed = JSON.parse(decodedData);
       if (parsed && typeof parsed === 'object') {
         CONFIG = parsed;
@@ -883,17 +886,17 @@ function getCurrentEditorData() {
 }
 
 // THE NEW SHAREABLE LINK GENERATOR
+// BAGONG SHAREABLE LINK GENERATOR (Gagana kahit sa Messenger)
 function generateShareLink() {
   const currentData = getCurrentEditorData();
   try {
-    // Convert current data object to a safe Base64 string for URL parameters
+    // Kinocompress natin ang text gamit ang built-in URI encoder para hindi humaba nang sobra
     const jsonStr = JSON.stringify(currentData);
-    const base64 = btoa(encodeURIComponent(jsonStr)).replace(/\+/g, '-').replace(/\//g, '_');
+    const safeData = bencode(jsonStr); // Pinalitan ang btoa para maging mas maikli
     
-    // Create the final shareable link
-    const shareUrl = `${window.location.origin}${window.location.pathname}?d=${base64}`;
+    const shareUrl = `${window.location.origin}${window.location.pathname}?d=${encodeURIComponent(safeData)}`;
     
-    // Copy seamlessly to clipboard
+    // Auto-copy sa clipboard
     navigator.clipboard.writeText(shareUrl).then(() => {
       const shareBtn = document.getElementById('share-btn');
       const origText = shareBtn.textContent;
@@ -907,14 +910,19 @@ function generateShareLink() {
         shareBtn.style.color = "#10b981";
       }, 2500);
     }).catch(err => {
-      alert("Hindi ma-auto copy. Heto ang iyong link:\n\n" + shareUrl);
+      // Kung ayaw sa messenger browser, magpapakita ng prompt na pwedeng kopyahin
+      prompt("Kopyahin ang link na ito at isend sa kaniya:", shareUrl);
     });
   } catch (e) {
-    alert("Masyadong malaki ang files o photos kaya hindi magkasya sa link. Subukang bawasan o liitan ang image sizes!");
+    alert("Paalala: Huwag muna mag-upload ng mabibigat na litrato sa Editor para magkasya ang link sa Messenger! Gumamit muna ng Emojis.");
     console.error(e);
   }
 }
 
+// Helper functions para sa maikling encoding
+function bencode(str) {
+  return btoa(unescape(encodeURIComponent(str))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
 function saveAndApply(){
   CONFIG = getCurrentEditorData();
   try{localStorage.setItem('surprise_cfg_v3',JSON.stringify(CONFIG));}catch(e){}
